@@ -235,12 +235,15 @@ app.get('/game/_map',
     if(name) {
     	var citizen = Citizen.prototype.byName[name];
     	if(citizen) {
-    		result.distanceFromNorm = citizen.getDistanceFromNorm();
-    		result.getDistanceFromOther = {};
+    		result.distanceFromNorm = {
+  				__me__ : citizen.getDistanceFromNorm()
+    		};
+    		result.distanceFromOther = {};
     		for(var other_name in Citizen.prototype.byName) {
-    			if(other_name !== name) {    				
-	    			result.getDistanceFromOther[other_name] = citizen.getDistanceFromOther(
-	    				Citizen.prototype.byName[other_name]);
+    			if(other_name !== name) {
+    				var other_citizen = Citizen.prototype.byName[other_name];    				
+	    			result.distanceFromOther[other_name] = citizen.getDistanceFromOther(other_citizen);
+	    			result.distanceFromNorm[other_name] = other_citizen.getDistanceFromNorm();
     			}
     		}
     	}
