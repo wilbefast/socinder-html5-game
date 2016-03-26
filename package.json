@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "readme": "README.md",
   "dependencies": {
+    "connect-ensure-login": "^0.1.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.0"
   },
