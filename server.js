@@ -2,6 +2,48 @@
 // GAME STATE
 // ----------------------------------------------------------------------------
 
+function Concept(name) {
+	this.name = name;
+}
+
+var concepts = [
+	new Concept("Cats"),
+	new Concept("Chainsaws"),
+	new Concept("Underpants"),
+	new Concept("Nazis"),
+	new Concept("Robot party"),
+	new Concept("Autocracy"),
+	new Concept("Anarchy"),
+	new Concept("Peanut allergies"),
+	new Concept("Golfing"),
+	new Concept("Socks"),
+	new Concept("Blowdarts"),
+	new Concept("Apathy"),
+	new Concept("Cranes"),
+	new Concept("Trains"),
+	new Concept("Donald Trump")
+];
+
+function Citizen(name) {
+	this.name = name;
+	this.opinions = {};
+	return this;
+}
+
+var citizens = [
+	new Citizen("Bob"),
+	new Citizen("Frank"),
+	new Citizen("John")
+];
+
+for(var i in citizens) {
+	for(var j in concepts) {
+		var citizen = citizens[i]
+		var concept = concepts[j];
+		citizen.opinions[concept.name] = Math.floor(Math.random() * 4)
+	}
+}
+
 // ------------------------------------
 // Game Objects
 // ------------------------------------
@@ -93,6 +135,12 @@ app.get('/prout',
     res.send("HELLO" + req.user.id);
 	}
 );
+
+app.get('/game/_citizens',
+	function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(citizens));
+});
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
