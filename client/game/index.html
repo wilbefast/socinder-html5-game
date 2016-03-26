@@ -10,8 +10,20 @@
 <canvas>
 </canvas>
 
+	<script type="text/javascript" src="/js/jquery.js"></script>
+
   <script type="text/javascript">
     window.onload = function() {
+
+		  $.getJSON("_map?citizen=John", {
+		    format: "json"
+		  }).done(function( data ){
+	      console.log(data);
+	      console.log("MY DISTANCE FROM SOCIETY NORM", data.distanceFromNorm.__me__);
+	      console.log("BOB'S DISTANCE FROM ME", data.distanceFromOther.Bob);
+	    });
+
+
     	var citizen_me = document.getElementById("citizen_me");
     	var citizen_unknown = document.getElementById("citizen_unknown");
     	var citizen_friend = document.getElementById("citizen_friend");
