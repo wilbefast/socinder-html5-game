@@ -2,9 +2,112 @@
 // GAME STATE
 // ----------------------------------------------------------------------------
 
+// ------------------------------------
+// Concepts
+// ------------------------------------
+
 function Concept(name) {
 	this.name = name;
+	this.overallJudgement = [ 0, 0, 0, 0 ];
+	this.normalisedOverallJudgement = [0, 0, 0, 0 ];
 }
+
+Concept.prototype.refreshNormalisedOverallJudgement = function() {
+	var best_judgement = null, best_judgement_value = -Infinity;
+	var worst_judgement = null, worst_judgement_value = Infinity;
+	for(var judgement in this.overallJudgement) {
+
+		var judgement_value = this.overallJudgement[judgement];
+		if(judgement_value > best_judgement_value) {
+			best_judgement_value = judgement_value;
+			best_judgement = judgement
+		}
+		if(judgement_value < worst_judgement_value) {
+			worst_judgement_value = judgement_value;
+			worst_judgement = judgement;
+		}
+	}
+	var distance_best_to_worst = best_judgement_value - worst_judgement_value;
+
+	for(var judgement in this.overallJudgement) {
+		var judgement_value = this.overallJudgement[judgement];
+		this.normalisedOverallJudgement[judgement] = (judgement_value - worst_judgement_value)/distance_best_to_worst;
+	} 
+}
+
+// ------------------------------------
+// Citizens
+// ------------------------------------
+
+function Citizen(name) {
+	this.name = name;
+	this.conceptJudgements = {};
+	this.citizenJudgements = {}
+	return this;
+}
+
+Citizen.prototype.setConceptJudgement = function(concept, value) {
+	if(citizen.conceptJudgements[concept.name]) {
+		concept.overallJudgement[value]--;
+	}
+	citizen.conceptJudgements[concept.name] = value;
+	concept.overallJudgement[value]++;
+	concept.refreshNormalisedOverallJudgement();
+}
+
+Citizen.prototype.getConceptJudgement = function(concept) {
+	return this.conceptJudgements[concept.name];
+}
+
+Citizen.prototype.judgeCitizen = function(targetCitizen, judgement) {
+	// already judged this target?
+	if(this.citizenJudgements[targetCitizen]) {
+		console.log("You're not allowed to judge multiple times!")
+	}
+	this.citizenJudgements[targetCitizen] = judgement;
+	var conceptValueChange = (judgement === "positive") ? 1 : -1;
+	for(var i in concepts) {
+		var concept = concepts[i];
+		var targetCitizenConceptJudgement = targetCitizen.getConceptJudgement(concept);
+		if(targetCitizenConceptJudgement) {
+			concept.overallJudgement[targetCitizenConceptJudgement] += conceptValueChange;
+			concept.refreshNormalisedOverallJudgement();
+		}
+	}
+}
+
+Citizen.prototype.getDistanceFromOther = function(other) {
+	var max_distance = concepts.length * 4;
+	var distance = 0;
+	for(var i in concepts) {
+		var my_opinion = this.getOpinion(concepts[i]);
+		var their_opinion = other.getOpinion(concepts[i]);
+		distance += Math.abs(my_opinion - their_opinion);
+	}
+	return distance / max_distance;
+};
+
+Citizen.prototype.getDistanceFromNorm = function() {
+	var total_distance = 0;
+	var total_concepts = 0;
+	for(var i in concepts) {
+		var concept = concepts[i];
+		if(this.conceptJudgements[concept.name]) {
+			var my_judgment = this.getConceptJudgement(concept);
+			total_score += concept.normalisedOverallJudgement[my_judgment];
+			total_concepts++;
+		}
+	}
+	if(total_concepts <= 0) {
+		return 0;
+	}
+	total_score /= total_concepts;
+	return total_score;
+};
+
+// ------------------------------------
+// Initialisation
+// ------------------------------------
 
 var concepts = [
 	new Concept("Cats"),
@@ -24,12 +127,6 @@ var concepts = [
 	new Concept("Donald Trump")
 ];
 
-function Citizen(name) {
-	this.name = name;
-	this.opinions = {};
-	return this;
-}
-
 var citizens = [
 	new Citizen("Bob"),
 	new Citizen("Frank"),
@@ -40,13 +137,9 @@ for(var i in citizens) {
 	for(var j in concepts) {
 		var citizen = citizens[i]
 		var concept = concepts[j];
-		citizen.opinions[concept.name] = Math.floor(Math.random() * 4)
+		citizen.setConceptJudgement(concept, Math.floor(Math.random() * 4));
 	}
 }
-
-// ------------------------------------
-// Game Objects
-// ------------------------------------
 
 // ----------------------------------------------------------------------------
 // SERVER
