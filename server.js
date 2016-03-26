@@ -10,7 +10,7 @@
 // SERVER
 // ----------------------------------------------------------------------------
 
-//var LOCALHOST = true; // set this to false to use AWS
+var LOCALHOST = false; // set this to false to use AWS
 
 var FACEBOOK_APP_ID;
 var FACEBOOK_APP_SECRET;
