@@ -1,3 +1,27 @@
 <html>
-I AM A GAME LOLZ
+
+  <div style="display:none">
+    <img id="citizen_me" src="/images/citizen_me.png" />
+    <img id="citizen_unknown" src="/images/citizen_unknown.png" />
+    <img id="citizen_friend" src="/images/citizen_friend.png" />
+    <img id="citizen_enemy" src="/images/citizen_enemy.png" />
+ 	</div>
+
+<canvas>
+</canvas>
+
+  <script type="text/javascript">
+    window.onload = function() {
+    	var citizen_me = document.getElementById("citizen_me");
+    	var citizen_unknown = document.getElementById("citizen_unknown");
+    	var citizen_friend = document.getElementById("citizen_friend");
+    	var citizen_enemy = document.getElementById("citizen_enemy");
+      ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+
+      ctx.drawImage(citizen_me, 32, 32, 32, 32);
+    }
+    
+
+  </script>
+
 </html>
