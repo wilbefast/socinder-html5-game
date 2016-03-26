@@ -41,7 +41,14 @@ app.use(express.static("client"));
 // Passport
 // ------------------------------------
 
+var login = require('connect-ensure-login');
+
 var passport = require('passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
+var users = {};
+
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new FacebookStrategy({
@@ -49,13 +56,26 @@ passport.use(new FacebookStrategy({
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: SERVER_URL + "/auth/facebook/callback"
   },
-  function(accessToken, refreshToken, profile, cb) {
-  	console.log("facebook lol");
-    // User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-    //   return cb(err, user);
-    // });
+  function(accessToken, refreshToken, profile, next) {
+  	var user = users[profile.id];
+  	if(!user) {
+  		user = {
+  			id : profile.id,
+  			displayName : profile.displayName
+  		}
+  		users[profile.id] = user;
+  	}
+    next(null, user);
   }
 ));
+
+passport.serializeUser(function(user, next) {
+  next(null, user.id);
+});
+
+passport.deserializeUser(function(id, next) {
+  next(null, users[id]);
+});
 
 // ------------------------------------
 // HTTP
@@ -65,9 +85,18 @@ http.listen(process.env.PORT || 3000, function(){
   console.log('listening on port 3000');
 });
 
-app.get('/login/facebook', passport.authenticate('facebook'));
+app.get('/login', passport.authenticate('facebook'));
 
-app.get('/auth/facebook/callback', function(req, res) {
-  res.send('hello world');
-  console.log("facebook lolz");
-});
+app.get('/prout',
+  login.ensureLoggedIn(),
+  function(req, res){
+    res.send("HELLO" + req.user.id);
+	}
+);
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/prout');
+  });
