@@ -309,15 +309,20 @@ app.get('/game/judgement/_getVictim',
 app.get('/game/_map',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
-  		result.distanceFromNorm = {
+  		message.distanceFromNorm = {
 				__me__ : citizen.getDistanceFromNorm()
   		};
-  		result.distanceFromOther = {};
+  		message.distanceFromOther = {};
+  		message.judgement = {};
   		for(var other_name in Citizen.prototype.byName) {
-  			if(other_name !== myName) {
+  			if(other_name !== citizen.name) {
   				var other_citizen = Citizen.prototype.byName[other_name];    				
-    			result.distanceFromOther[other_name] = citizen.getDistanceFromOther(other_citizen);
-    			result.distanceFromNorm[other_name] = other_citizen.getDistanceFromNorm();
+    			message.distanceFromOther[other_name] = citizen.getDistanceFromOther(other_citizen);
+    			message.distanceFromNorm[other_name] = other_citizen.getDistanceFromNorm();
+    			var judgement = citizen.citizenJudgements[other_name];
+    			if(judgement) {
+    				message.judgement[other_name] = judgement;
+    			}
   			}
   		}
 		});
