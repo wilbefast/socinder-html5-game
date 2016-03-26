@@ -24,7 +24,7 @@ if(LOCALHOST) {
 else {
 	FACEBOOK_APP_ID = 1719504328267924;
 	FACEBOOK_APP_SECRET = "5a30ef2234b6114fd48d0c7e10d5b98e";
-	SERVER_URL = "http://localhost:3000"
+	SERVER_URL = "http://socinder-dev.eu-west-1.elasticbeanstalk.com"
 }
 
 // ------------------------------------
@@ -65,8 +65,7 @@ http.listen(process.env.PORT || 3000, function(){
   console.log('listening on port 3000');
 });
 
-app.get('/login/facebook',
-  passport.authenticate('facebook'));
+app.get('/login/facebook', passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback', function(req, res) {
   res.send('hello world');
