@@ -1,0 +1,18 @@
+<html>
+
+	<script type="text/javascript" src="/js/jquery.js"></script>
+
+  <script type="text/javascript">
+    window.onload = function() {
+
+		  $.getJSON("_getVictim?citizen=John", {
+		    format: "json"
+		  }).done(function( data ){
+	      console.log(data);
+
+        alert(data.name + " (see log)")
+	    });
+    }
+  </script>
+
+</html>

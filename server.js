@@ -1,4 +1,26 @@
 // ----------------------------------------------------------------------------
+// UTILITIES
+// ----------------------------------------------------------------------------
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+// ----------------------------------------------------------------------------
 // GAME STATE
 // ----------------------------------------------------------------------------
 
@@ -53,6 +75,35 @@ function Citizen(name) {
 	return this;
 }
 Citizen.prototype.byName = {}
+
+Citizen.prototype.getRandomNotJudged = function() {
+	var randomisedCitizens = [];
+	for(var name in Citizen.prototype.byName) {
+		if(name !== this.name && !this.citizenJudgements[name]) {
+			randomisedCitizens.push(Citizen.prototype.byName[name]);
+		}
+	}
+	if(randomisedCitizens.length > 0) {
+		shuffle(randomisedCitizens);
+		return randomisedCitizens[0];
+	}
+	else {
+		console.log("There is not left to judge");
+		return null;
+	}
+}
+
+Citizen.prototype.getRandomConcepts = function(number_to_draw) {
+	var randomisedConcepts = [];
+	for(var conceptName in this.conceptJudgements) {
+		randomisedConcepts.push({
+			name : conceptName,
+			judgment : this.conceptJudgements[conceptName]
+		});
+	}
+	shuffle(randomisedConcepts);
+	return randomisedConcepts.slice(0, Math.min(number_to_draw, randomisedConcepts.length));
+}
 
 Citizen.prototype.setConceptJudgement = function(concept, value) {
 	if(this.conceptJudgements[concept.name]) {
@@ -220,42 +271,58 @@ http.listen(process.env.PORT || 3000, function(){
 
 app.get('/login', passport.authenticate('facebook'));
 
-app.get('/prout',
-  login.ensureLoggedIn(),
-  function(req, res){
-    res.send("HELLO" + req.user.id);
+var responseRelativeToCitizen = function(req, res, f) {
+		var message = {};
+  	res.setHeader('Content-Type', 'application/json');
+    var myName = req.query.citizen;
+    if(myName) {
+    	var citizen = Citizen.prototype.byName[myName];
+    	if(citizen) {
+    		f(citizen, message)
+    	}
+    	else {
+    		message.error = "No citizen called '" + myName + "'";
+    	}
+    }
+    else {
+    	message.error = "Missing 'citizen' query parameter";
+    }
+    res.send(JSON.stringify(message));
+}
+
+
+app.get('/game/judgement/_getVictim',
+	function(req, res) {
+		responseRelativeToCitizen(req, res, function(citizen, message) {
+			var victim = citizen.getRandomNotJudged();
+			if(victim) {
+				message.name = victim.name;
+				message.concepts = victim.getRandomConcepts(3);
+			}
+			else {
+				message.error = "There is nobody left for '" + citizen.name + "' to judge";
+			}
+		});
 	}
 );
 
 app.get('/game/_map',
 	function(req, res) {
-		var result = {};
-  	res.setHeader('Content-Type', 'application/json');
-    var name = req.query.citizen;
-    if(name) {
-    	var citizen = Citizen.prototype.byName[name];
-    	if(citizen) {
-    		result.distanceFromNorm = {
-  				__me__ : citizen.getDistanceFromNorm()
-    		};
-    		result.distanceFromOther = {};
-    		for(var other_name in Citizen.prototype.byName) {
-    			if(other_name !== name) {
-    				var other_citizen = Citizen.prototype.byName[other_name];    				
-	    			result.distanceFromOther[other_name] = citizen.getDistanceFromOther(other_citizen);
-	    			result.distanceFromNorm[other_name] = other_citizen.getDistanceFromNorm();
-    			}
-    		}
-    	}
-    	else {
-    		result.error = "no citizen called '" + name + "'";
-    	}
-    }
-    else {
-    	result.error = "missing 'citizen' query parameter";
-    }
-    res.send(JSON.stringify(result));
-});
+		responseRelativeToCitizen(req, res, function(citizen, message) {
+  		result.distanceFromNorm = {
+				__me__ : citizen.getDistanceFromNorm()
+  		};
+  		result.distanceFromOther = {};
+  		for(var other_name in Citizen.prototype.byName) {
+  			if(other_name !== myName) {
+  				var other_citizen = Citizen.prototype.byName[other_name];    				
+    			result.distanceFromOther[other_name] = citizen.getDistanceFromOther(other_citizen);
+    			result.distanceFromNorm[other_name] = other_citizen.getDistanceFromNorm();
+  			}
+  		}
+		});
+	}
+);
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
