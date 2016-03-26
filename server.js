@@ -43,14 +43,22 @@ function Citizen(name) {
 	this.name = name;
 	this.conceptJudgements = {};
 	this.citizenJudgements = {}
+	this.byName[name] = this;
+
+	for(var j in concepts) {
+		var concept = concepts[j];
+		this.setConceptJudgement(concept, Math.floor(Math.random() * 4));
+	}
+
 	return this;
 }
+Citizen.prototype.byName = {}
 
 Citizen.prototype.setConceptJudgement = function(concept, value) {
-	if(citizen.conceptJudgements[concept.name]) {
+	if(this.conceptJudgements[concept.name]) {
 		concept.overallJudgement[value]--;
 	}
-	citizen.conceptJudgements[concept.name] = value;
+	this.conceptJudgements[concept.name] = value;
 	concept.overallJudgement[value]++;
 	concept.refreshNormalisedOverallJudgement();
 }
@@ -80,15 +88,15 @@ Citizen.prototype.getDistanceFromOther = function(other) {
 	var max_distance = concepts.length * 4;
 	var distance = 0;
 	for(var i in concepts) {
-		var my_opinion = this.getOpinion(concepts[i]);
-		var their_opinion = other.getOpinion(concepts[i]);
+		var my_opinion = this.getConceptJudgement(concepts[i]);
+		var their_opinion = other.getConceptJudgement(concepts[i]);
 		distance += Math.abs(my_opinion - their_opinion);
 	}
 	return distance / max_distance;
 };
 
 Citizen.prototype.getDistanceFromNorm = function() {
-	var total_distance = 0;
+	var total_score = 0;
 	var total_concepts = 0;
 	for(var i in concepts) {
 		var concept = concepts[i];
@@ -127,19 +135,9 @@ var concepts = [
 	new Concept("Donald Trump")
 ];
 
-var citizens = [
-	new Citizen("Bob"),
-	new Citizen("Frank"),
-	new Citizen("John")
-];
-
-for(var i in citizens) {
-	for(var j in concepts) {
-		var citizen = citizens[i]
-		var concept = concepts[j];
-		citizen.setConceptJudgement(concept, Math.floor(Math.random() * 4));
-	}
-}
+new Citizen("Bob");
+new Citizen("Frank");
+new Citizen("John");
 
 // ----------------------------------------------------------------------------
 // SERVER
@@ -229,10 +227,31 @@ app.get('/prout',
 	}
 );
 
-app.get('/game/_citizens',
+app.get('/game/_map',
 	function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(citizens));
+		var result = {};
+  	res.setHeader('Content-Type', 'application/json');
+    var name = req.query.citizen;
+    if(name) {
+    	var citizen = Citizen.prototype.byName[name];
+    	if(citizen) {
+    		result.distanceFromNorm = citizen.getDistanceFromNorm();
+    		result.getDistanceFromOther = {};
+    		for(var other_name in Citizen.prototype.byName) {
+    			if(other_name !== name) {    				
+	    			result.getDistanceFromOther[other_name] = citizen.getDistanceFromOther(
+	    				Citizen.prototype.byName[other_name]);
+    			}
+    		}
+    	}
+    	else {
+    		result.error = "no citizen called '" + name + "'";
+    	}
+    }
+    else {
+    	result.error = "missing 'citizen' query parameter";
+    }
+    res.send(JSON.stringify(result));
 });
 
 app.get('/auth/facebook/callback',
