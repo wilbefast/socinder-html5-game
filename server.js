@@ -119,9 +119,18 @@ Citizen.prototype.getConceptJudgement = function(concept) {
 }
 
 Citizen.prototype.judgeCitizen = function(targetCitizen, judgement) {
+	// cannot judge yourself
+	if(this.name === targetCitizen.name) {
+		return "'" + this.name + "' cannot self-judge";
+	}
 	// already judged this target?
 	if(this.citizenJudgements[targetCitizen]) {
-		console.log("You're not allowed to judge multiple times!")
+		return "'" + this.name + "' has already judged '" + targetCitizen.name 
+		+ "' with judgement '" + this.citizenJudgements[targetCitizen] + "'";
+	}
+	// valid judgement?
+	if(judgement !== "positive" && judgement !== "negative") {
+		return "Invalid judgement '" + judgement + "'";
 	}
 	this.citizenJudgements[targetCitizen] = judgement;
 	var conceptValueChange = (judgement === "positive") ? 1 : -1;
@@ -302,6 +311,32 @@ app.get('/game/judgement/_getVictim',
 			else {
 				message.error = "There is nobody left for '" + citizen.name + "' to judge";
 			}
+		});
+	}
+);
+
+app.get('/game/judgement/_doJudge',
+	function(req, res) {
+		responseRelativeToCitizen(req, res, function(citizen, message) {
+	    var otherName = req.query.otherCitizen;
+	    if(otherName) {
+	    	var otherCitizen = Citizen.prototype.byName[otherName];
+	    	if(otherCitizen) {
+	    		var judgement = req.query.judgement;
+	    		if(judgement) {
+    				message.error = citizen.judgeCitizen(otherCitizen, judgement) || false;
+	    		}
+	    		else {	    			
+	    			message.error = "Missing 'judgement' query parameter";
+	    		}
+	    	}
+	    	else {
+	    		message.error = "No citizen called '" + otherName + "'";
+	    	}
+	    }
+	    else {
+	    	message.error = "Missing 'citizen' query parameter";
+	    }
 		});
 	}
 );
