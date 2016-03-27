@@ -446,6 +446,7 @@ app.get('/_doJudgeConcept',
 				}
 				else {
 					citizen.setConceptJudgement(concept, conceptValue);
+					message.youAreANewbie = citizen.isNewbie();
 				}
 			}
 		});
