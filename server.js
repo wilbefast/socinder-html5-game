@@ -67,14 +67,16 @@ function Citizen(name) {
 	this.citizenJudgements = {}
 	this.byName[name] = this;
 
+	return this;
+}
+Citizen.prototype.byName = {}
+
+Citizen.prototype.randomConceptJudgements = function() {
 	for(var j in concepts) {
 		var concept = concepts[j];
 		this.setConceptJudgement(concept, Math.floor(Math.random() * 4));
 	}
-
-	return this;
 }
-Citizen.prototype.byName = {}
 
 Citizen.prototype.getRandomNotJudged = function() {
 	var randomisedCitizens = [];
@@ -177,6 +179,8 @@ Citizen.prototype.getDistanceFromNorm = function() {
 // Initialisation
 // ------------------------------------
 
+GAME_ID = new Date().getTime();
+
 var concepts = [
 	new Concept("Cats"),
 	new Concept("Chainsaws"),
@@ -195,17 +199,19 @@ var concepts = [
 	new Concept("Donald Trump")
 ];
 
-new Citizen("Bob");
-new Citizen("John");
-new Citizen("Frank");
-new Citizen("D");
-new Citizen("Q");
-new Citizen("W");
-new Citizen("X");
-new Citizen("S");
-new Citizen("C");
-new Citizen("K");
-new Citizen("J");
+ userName = ["Aaron","Abdallah","Abril","Aby","Adam","Ahmed","Aiden","Akira","Alexandre","Ali","Alice","Amelia","Andrei","Anna","Arthur","Ava","Ben","Camila","Catherine","Celine",
+			 "Charlotte","Christophe","Daniel","David","Diego","Dylan","Elodie","Elsa","Emilie","Emma","Enzo","Filip","Finn","Francesco","Gabriel","Harry","Haruto","Hina","Hiroshi","Hiroto",
+			 "Ines","Isabela","Jack","Jacob","Jean","Jeremy","Jessica","Joshua","Juan","Julie","Julien","Kayla","Kevin","Kristin","Lara","Laura","Lea","Leila","Lena","Leon",
+			 "Liam","Lily","Lisa","Lucas","Lucie","Luisa","Luke","Madison","Mamadou","Manon","Marie","Marine","Matheo","Maxime","Mehdi","Mia","Miguel","Mohamed","Nathan","Nicolas",
+			 "Noa","Olivia","Oscar","Paul","Paula","Pierre","Ren","Riley","Santiago","Sara","Sebastian","Sophie","Stefan","Thomas","Wei","William","Yuna","Yusuf","Zoe","William",
+			 "Clement","Mathieu","Maxence","Simon","Charlie","Guillaume"];
+shuffle(userName);
+
+userName.nextIndex = 0;
+for(var i = 0; i < 10; i++) {
+	var bot = new Citizen(userName[userName.nextIndex++]);
+	bot.randomConceptJudgements();
+}
 
 // ----------------------------------------------------------------------------
 // SERVER
@@ -307,6 +313,34 @@ var responseRelativeToCitizen = function(req, res, f) {
     res.send(JSON.stringify(message));
 }
 
+app.get('/_joinGame',
+	function(req, res) {
+		var citizen = req.query.citizen;
+		var gameId = req.query.gameId;
+		console.log(citizen, gameId);
+		var message = { 
+			gameId : GAME_ID 
+		};
+		var isValidCitizen = (Citizen.prototype.byName[citizen]) !== undefined;
+		var isGameIdValid = (gameId == GAME_ID);
+
+		if(!isValidCitizen || !isGameIdValid) {
+			if(userName.nextIndex < userName.length) {
+				var newbie = new Citizen(userName[userName.nextIndex++]);
+				message.error = false;
+				message.yourName = newbie.name;
+			}
+			else {
+				message.error = "All the usernames have already been used"
+			}
+		}
+		else {
+			console.log("welcome back", citizen);
+			message.yourName = citizen;
+		}
+		res.send(JSON.stringify(message));
+	}
+);
 
 app.get('/_getVictim',
 	function(req, res) {
@@ -378,12 +412,3 @@ app.get('/auth/facebook/callback',
     // Successful authentication, redirect home.
     res.redirect('/prout');
   });
-  
-  
-  
- userName = ["Aaron","Abdallah","Abril","Aby","Adam","Ahmed","Aiden","Akira","Alexandre","Ali","Alice","Amelia","Andrei","Anna","Arthur","Ava","Ben","Camila","Catherine","Celine",
-			 "Charlotte","Christophe","Daniel","David","Diego","Dylan","Elodie","Elsa","Emilie","Emma","Enzo","Filip","Finn","Francesco","Gabriel","Harry","Haruto","Hina","Hiroshi","Hiroto",
-			 "Ines","Isabela","Jack","Jacob","Jean","Jeremy","Jessica","Joshua","Juan","Julie","Julien","Kayla","Kevin","Kristin","Lara","Laura","Lea","Leila","Lena","Leon",
-			 "Liam","Lily","Lisa","Lucas","Lucie","Luisa","Luke","Madison","Mamadou","Manon","Marie","Marine","Matheo","Maxime","Mehdi","Mia","Miguel","Mohamed","Nathan","Nicolas",
-			 "Noa","Olivia","Oscar","Paul","Paula","Pierre","Ren","Riley","Santiago","Sara","Sebastian","Sophie","Stefan","Thomas","Wei","William","Yuna","Yusuf","Zoe","William",
-			 "Clement","Mathieu","Maxence","Simon","Charlie","Guillaume"];

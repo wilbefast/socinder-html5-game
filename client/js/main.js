@@ -6,9 +6,28 @@ $(document).ready(function(){
 		questions.push('question'+i);
 	}
 
-	getUnjudged();
+	// Get a name from the server if we don't have one
+	var query = (localStorage.myName && localStorage.gameId) 
+		? "?citizen=" + localStorage.myName + "&gameId=" + localStorage.gameId
+		: "";
+	$.getJSON("/_joinGame" + query, {format: "json"}).done(function(data){
+		if(data.error) {
+			console.error("Failed to join the game", data.error);
+		}
+		else {
+			console.log("data", data);
+			localStorage.setItem('myName', data.yourName);
+			localStorage.setItem('gameId', data.gameId);
 
+			getMap();
+			getUnjudged();
+		}
+	});
+	
+	// hide everything except the current page
+	$(".page").hide();
 	var currentPageId = '#setup-account';
+	$(currentPageId).show();
 	
 	//$('#judge .profile').on('swipeleft', swipeleftHandler);
 	//$('#judge .profile').on('swiperight', swiperightHandler);
@@ -38,27 +57,35 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		$(currentPageId).slideUp(200);
-		$('#map').slideDown(200);
+		if(currentPageId === "#map") {
+			return;
+		}
+		var $previousPageId = $(currentPageId);
+		$previousPageId.slideUp(200);
 		currentPageId = "#map";
+		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 
 	$('#judge-icon').on('click', function(){
-		$(currentPageId).slideUp(200);
-		$('#judge').slideDown(200);
+		if(currentPageId === "#judge") {
+			return;
+		}
+		var $previousPageId = $(currentPageId);
+		$previousPageId.slideUp(200);
+		currentPageId = "#judge";
+		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 	
 	$('#answers-box .icon-container').on('click', nextQuestion);
 
 	console.log('coucou');
-	
+
 });
 
 
 function getUnjudged() {
 		
-
-		$.getJSON("/_getVictim?citizen=John", {format: "json"}).done(function(data){
+		$.getJSON("/_getVictim?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
 		    
 		    citizen = data;
 		    console.log(citizen);
