@@ -70,6 +70,7 @@ $(document).ready(function(){
 			localStorage.setItem('gameId', data.gameId);
 
 			$(".yourName").text(data.yourName);
+			$(".yourPicture").attr("src", "/images/profilepics/" + data.yourName + ".jpg")
 
 			if(data.youAreANewbie) {
 				currentPageId = '#setup-account';
@@ -151,6 +152,7 @@ function getUnjudgedCitizen() {
     currentCitizen = data;
     currentCitizenName = data.name;
     citizen = data;
+	
 
 		$('#profile-container').empty();		
 
@@ -230,7 +232,8 @@ function getUnjudgedConcept() {
 		console.log(questionsContent[conceptToJudge]);
 		console.log(conceptToJudge);
   		$('#question').html(questionsContent[conceptToJudge]);
-		
+	
+	
 		//set icons
 		$('#answers-box').empty();		
 
