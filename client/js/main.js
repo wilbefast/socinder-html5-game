@@ -94,6 +94,13 @@ $(document).ready(function(){
 function getUnjudgedCitizen() {	
 	
 	$.getJSON("/_getUnjudgedCitizen?citizen=" + localStorage.myName, {format: "json"}).done(function(data){    
+    if(data.error) {
+    	console.error(data.error);
+    	getMap();
+    	setPage("#map");
+    	return;
+    }
+
     currentCitizen = data;
     currentCitizenName = data.name;
     citizen = data;
@@ -129,7 +136,12 @@ function getUnjudgedCitizen() {
 
 function judgeCitizen(answer, judgedName) {
 	$.getJSON("/_doJudge?citizen=" + localStorage.myName + '&otherCitizen=' + judgedName + '&judgement=' + answer, {format: "json"}).done(function(data){
-		getUnjudgedCitizen();
+		if(data.error) {
+			console.error(data.error);
+		}
+		else {
+			getUnjudgedCitizen();
+		}
 	})
 }
 

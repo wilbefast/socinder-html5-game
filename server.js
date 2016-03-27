@@ -117,6 +117,7 @@ Citizen.prototype.getRandomNotJudged = function() {
 	}
 	if(randomisedCitizens.length > 0) {
 		shuffle(randomisedCitizens);
+		console.log(this.name, randomisedCitizens[0].name);
 		return randomisedCitizens[0];
 	}
 	else {
@@ -156,15 +157,15 @@ Citizen.prototype.judgeCitizen = function(targetCitizen, judgement) {
 		return "'" + this.name + "' cannot self-judge";
 	}
 	// already judged this target?
-	if(this.citizenJudgements[targetCitizen]) {
+	if(this.citizenJudgements[targetCitizen.name]) {
 		return "'" + this.name + "' has already judged '" + targetCitizen.name 
-		+ "' with judgement '" + this.citizenJudgements[targetCitizen] + "'";
+		+ "' with judgement '" + this.citizenJudgements[targetCitizen.name] + "'";
 	}
 	// valid judgement?
 	if(judgement !== "positive" && judgement !== "negative") {
 		return "Invalid judgement '" + judgement + "'";
 	}
-	this.citizenJudgements[targetCitizen] = judgement;
+	this.citizenJudgements[targetCitizen.name] = judgement;
 	var conceptValueChange = (judgement === "positive") ? 1 : -1;
 	for(var i in concepts) {
 		var concept = concepts[i];
