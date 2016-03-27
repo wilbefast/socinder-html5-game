@@ -179,6 +179,8 @@ Citizen.prototype.getDistanceFromNorm = function() {
 // Initialisation
 // ------------------------------------
 
+GAME_ID = new Date().getTime();
+
 var concepts = [
 	new Concept("Cats"),
 	new Concept("Chainsaws"),
@@ -311,16 +313,30 @@ var responseRelativeToCitizen = function(req, res, f) {
     res.send(JSON.stringify(message));
 }
 
-app.get('/_getName',
+app.get('/_joinGame',
 	function(req, res) {
-		var message = {}
-		if(userName.nextIndex < userName.length) {
-			var newbie = new Citizen(userName[userName.nextIndex++]);
-			message.error = false;
-			message.yourName = newbie.name;
+		var citizen = req.query.citizen;
+		var gameId = req.query.gameId;
+		console.log(citizen, gameId);
+		var message = { 
+			gameId : GAME_ID 
+		};
+		var isValidCitizen = (Citizen.prototype.byName[citizen]) !== undefined;
+		var isGameIdValid = (gameId == GAME_ID);
+
+		if(!isValidCitizen || !isGameIdValid) {
+			if(userName.nextIndex < userName.length) {
+				var newbie = new Citizen(userName[userName.nextIndex++]);
+				message.error = false;
+				message.yourName = newbie.name;
+			}
+			else {
+				message.error = "All the usernames have already been used"
+			}
 		}
 		else {
-			message.error = "All the usernames have already been used"
+			console.log("welcome back", citizen);
+			message.yourName = citizen;
 		}
 		res.send(JSON.stringify(message));
 	}

@@ -1,25 +1,22 @@
 $(document).ready(function(){
 
 	// Get a name from the server if we don't have one
-	if(localStorage.myName) {
-		console.log("your name is", localStorage.myName);
-		getMap();
-		getUnjudged();
-	}
-	else {
-		$.getJSON("/_getName", {format: "json"}).done(function(data){
-			if(data.error) {
-				console.error("Failed to join the game", data.error);
-			}
-			else {
-				console.log("data", data);
-				localStorage.setItem('myName', data.yourName);
+	var query = (localStorage.myName && localStorage.gameId) 
+		? "?citizen=" + localStorage.myName + "&gameId=" + localStorage.gameId
+		: "";
+	$.getJSON("/_joinGame" + query, {format: "json"}).done(function(data){
+		if(data.error) {
+			console.error("Failed to join the game", data.error);
+		}
+		else {
+			console.log("data", data);
+			localStorage.setItem('myName', data.yourName);
+			localStorage.setItem('gameId', data.gameId);
 
-				getMap();
-				getUnjudged();
-			}
-		});
-	}
+			getMap();
+			getUnjudged();
+		}
+	});
 	
 	// hide everything except the current page
 	$(".page").hide();
