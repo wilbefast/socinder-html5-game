@@ -11,6 +11,17 @@ var drawSize = 32;
 
 var ctx = canvas.getContext("2d");
 
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 function getMap() {
 
 
@@ -46,9 +57,7 @@ function getMap() {
 		ctx.drawImage(img, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
 	  };
 	  img.src = '/images/profilepics/'+localStorage.myName+'.jpg';
-	  
-	  var left = Math.random() > 0.5 ? 1 : 0;
-	  
+
 	  var imgArray = [];
 	  var i = 0;
 	  
@@ -70,13 +79,13 @@ function getMap() {
 			
 			
 			imgArray[i].onload = function(){
-			left = left % 2;
+
+				left = this.src.hashCode() % 2;
+
 			
 			ctx.drawImage(this,
 			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[this.id] * radius * Math.cos((0.5+data.distanceFromOther[this.id]) * Math.PI)),
 			(canvas.height	 * 0.5) + data.distanceFromNorm[this.id] * radius * Math.sin((0.5+data.distanceFromOther[this.id]) * Math.PI),drawSize,drawSize);
-			
-			left++;
 		};
 		imgArray[i].id = name;
 		imgArray[i] .src = "/images/profilepics/"+name+".jpg";
