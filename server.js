@@ -196,8 +196,16 @@ var concepts = [
 ];
 
 new Citizen("Bob");
-new Citizen("Frank");
 new Citizen("John");
+new Citizen("Frank");
+new Citizen("D");
+new Citizen("Q");
+new Citizen("W");
+new Citizen("X");
+new Citizen("S");
+new Citizen("C");
+new Citizen("K");
+new Citizen("J");
 
 // ----------------------------------------------------------------------------
 // SERVER
