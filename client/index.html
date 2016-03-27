@@ -5,11 +5,21 @@
 	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery-mobile.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/map.js" defer></script>
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<meta charset = "utf-8">
 </head>
+
+<div style="display:none">
+	<img id="center" src="/images/center.png" />
+  <img id="citizen_me" src="/images/citizen_me.png" />
+  <img id="citizen_unknown" src="/images/citizen_unknown.png" />
+  <img id="citizen_friend" src="/images/citizen_friend.png" />
+  <img id="citizen_enemy" src="/images/citizen_enemy.png" />
+</div>
+
 <body>
 	<nav>
 		<i id='settings-icon' class="fa fa-cog fa-4x icon"></i>
@@ -17,9 +27,12 @@
 		<i id='map-icon' class="fa fa-location-arrow fa-4x icon"></i>
 	</nav>
 	
-	<div id="map"></div>
+	<div id="map" class="page">
+		<canvas width="1280" height="728" id="map_canvas" color="cyan">
+		</canvas>
+	</div>
 	
-	<div id="judge">
+	<div id="judge" class="page">
 		<div id="profile-container">
 			<!--<div class="profile untouched">
 				<img src="profilepics/profile.jpg" class="profile-pic">
@@ -44,8 +57,10 @@
 		<div id="like" class="decision">
 		</div>
 	</div>
-	<div id="settings"></div>
-	<div id="elimination">
+	<div id="settings" class="page">
+	</div>
+
+	<div id="elimination" class="page">
 		<div id="elimination-container">
 			<div class="profile">
 				<img src="images/profilepics/profile.jpg" class="profile-pic">
@@ -61,7 +76,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="profile">
+
+
+			<div class="profile page">
 				<img src="images/profilepics/profile.jpg" class="profile-pic">
 					<div class="infos">
 						<h1 class="name">TheWinner357</h1>

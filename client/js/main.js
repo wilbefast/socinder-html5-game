@@ -1,9 +1,30 @@
 $(document).ready(function(){
 
-	getUnjudged();
-	
+	// Get a name from the server if we don't have one
+	if(localStorage.myName) {
+		console.log("your name is", localStorage.myName);
+		getMap();
+		getUnjudged();
+	}
+	else {
+		$.getJSON("/_getName", {format: "json"}).done(function(data){
+			if(data.error) {
+				console.error("Failed to join the game", data.error);
+			}
+			else {
+				console.log("data", data);
+				localStorage.setItem('myName', data.yourName);
 
-	var currentPageId = '#judge';
+				getMap();
+				getUnjudged();
+			}
+		});
+	}
+	
+	// hide everything except the current page
+	$(".page").hide();
+	var currentPageId = '#map';
+	$(currentPageId).show();
 
 	console.log($('.icon-container').css('width'));
 	
@@ -35,25 +56,30 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		$(currentPageId).slideUp(200);
-		$('#map').slideDown(200);
+		if(currentPageId === "#map") {
+			return;
+		}
+		var $previousPageId = $(currentPageId);
+		$previousPageId.slideUp(200);
 		currentPageId = "#map";
+		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 
 	$('#judge-icon').on('click', function(){
-		$(currentPageId).slideUp(200);
-		$('#judge').slideDown(200);
+		if(currentPageId === "#judge") {
+			return;
+		}
+		var $previousPageId = $(currentPageId);
+		$previousPageId.slideUp(200);
+		currentPageId = "#judge";
+		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
-	
-	console.log('coucou');
-	
 });
 
 
 function getUnjudged() {
 		
-
-		$.getJSON("/_getVictim?citizen=John", {format: "json"}).done(function(data){
+		$.getJSON("/_getVictim?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
 		    
 		    citizen = data;
 		    console.log(citizen);

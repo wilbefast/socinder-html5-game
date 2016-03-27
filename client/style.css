@@ -167,8 +167,7 @@ nav {
   /*cursor: w-resize;*/
 }
 
-
-#map {
+.ui-loader {
 	display: none;
 }
 
