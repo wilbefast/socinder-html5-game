@@ -3,6 +3,53 @@ var currentCitizen;
 var currentCitizenName ="";
 var currentPageId;
 var conceptToJudge;
+questionsContent = {
+    "money":    "Répartition égalitaire des richesses ou récompense au mérite ?"
+,
+
+   "justice":    "Objectif de la justice : protéger les innocents ou punir les coupables ?"
+,
+
+   "war":    "Les interventions armées : mal nécessaire ou brutalité injustifiée ?"
+,
+
+   "migration":    "Circulation libre ou contrôle des frontières ?"
+,
+
+   "religion":    "Abolir les religions ou honorer la seule vraie foi ?"
+,
+
+   "tradition":    "Braver les idées en place ou conserver les traditions ?"
+,
+
+   "surveillance":    "Préserver l'intimité de chacun ou assurer la sécurité de tous ?"
+,
+
+   "authority":    "Gouvernement : auto-gestion ou autorité légitime ?"
+,
+
+   "competitive":    "Encourager la collaboration ou stimuler la compétition ?"
+,
+
+   "nature":    "Persister au naturel ou perfectionnement technologique ?"
+,
+
+   "adaptability":    "S'adapter à notre environnement ou le former à notre image ?"
+,
+
+   "carrot":    "Nourriture 100% végétale ou alimentation omnivore ?"
+,
+
+   "fashion":    "Votre look : Expression de votre personnalité ou simplement utilitaire ?"
+,
+
+   "hobby":    "Roman au coin du feu ou Télévision sur le canapé ?"
+,
+
+"dog":    "Chien ou Chat ?"};
+
+
+
 
 $(document).ready(function(){
 
@@ -184,7 +231,33 @@ function getUnjudgedConcept() {
     }
     else {
     	conceptToJudge = data.conceptName;
-  		$('#question').html(conceptToJudge);
+		console.log(questionsContent[conceptToJudge]);
+		console.log(conceptToJudge);
+  		$('#question').html(questionsContent[conceptToJudge]);
+		
+		//set icons
+		$('#answers-box').empty();		
+
+		
+		
+		newDiv = 	'<div class="answers">'+
+						'<div id="0" class="icon-container">'+
+							'<img class="answer-icon 0" src="images/icons/'+conceptToJudge+'0.png">'+
+						'</div>'+
+						'<div id="1" class="icon-container">'+
+							'<img class="answer-icon 1" src="images/icons/'+conceptToJudge+'1.png">'+
+						'</div>'+
+						'<div id="2" class="icon-container">'+
+							'<img class="answer-icon 2" src="images/icons/'+conceptToJudge+'2.png">'+
+						'</div>'+
+						'<div id="3" class="icon-container">'+
+							'<img class="answer-icon 3" src="images/icons/'+conceptToJudge+'3.png">'+
+						'</div>'+
+				'</div>';
+				
+				
+			$('#answers-box')
+			.append(newDiv)	;
     }
   });
 }
@@ -211,6 +284,9 @@ function judgeConcept(conceptValue, conceptName) {
 			}
 	});
 }
+
+
+
 
 // ----------------------------------------------------------------------------
 // NAVIGATION BETWEEN PAGES
