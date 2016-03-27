@@ -32,7 +32,7 @@
 		var ctx = canvas.getContext("2d");
 		ctx.drawImage(center, canvas.width * 0.5 -drawSize, canvas.height * 0.5 -drawSize, drawSize, drawSize);
 		
-		$.getJSON("_map?citizen=John", {
+		$.getJSON("/_getMap?citizen=John", {
 		    format: "json"
 		  }).done(function( data ){
 		 
