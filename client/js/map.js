@@ -7,7 +7,7 @@ var citizen_enemy = document.getElementById("citizen_enemy");
 var canvas = document.getElementById("map_canvas");
 var radius = Math.min(canvas.width,canvas.height) * 0.5;
 var radiusOuter = radius * 0.8;		
-var drawSize = 32;
+var drawSize = 64;
 
 var ctx = canvas.getContext("2d");
 
@@ -54,7 +54,7 @@ function getMap() {
 	  console.log("img:", img);
 	  img.onload = function(){
 		  
-		ctx.drawImage(img, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
+		ctx.drawImage(img, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize*2, drawSize*2);
 	  };
 	  img.src = '/images/profilepics/'+localStorage.myName+'.jpg';
 
@@ -76,22 +76,24 @@ function getMap() {
 			else 
 				break;*/
 		  
-			
+			var ox = canvas.width * 0.5;
+			var oy = canvas.height * 0.5;
 			
 			imgArray[i].onload = function(){
 
-				left = this.src.hashCode() % 2;
+				var direction = (this.src.hashCode() % 2) ? -1 : 1
+				var distance = data.distanceFromNorm[this.id] * radius;
+				console.log(data.distanceFromOther[this.id])
+				var angle = data.distanceFromOther[this.id] * Math.PI * direction + Math.PI*0.5;
+				var x = distance * Math.cos(angle);
+				var y = distance * Math.sin(angle);
 
-			
-			ctx.drawImage(this,
-			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[this.id] * radius * Math.cos((0.5+data.distanceFromOther[this.id]) * Math.PI)),
-			(canvas.height	 * 0.5) + data.distanceFromNorm[this.id] * radius * Math.sin((0.5+data.distanceFromOther[this.id]) * Math.PI),drawSize,drawSize);
+				ctx.drawImage(this, ox + x - drawSize*0.5, oy + y - drawSize*0.5, drawSize, drawSize);
 		};
 		imgArray[i].id = name;
 		imgArray[i] .src = "/images/profilepics/"+name+".jpg";
 		i++;
-			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
-			
+
 			
 	  }
 	});
