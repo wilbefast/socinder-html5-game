@@ -24,18 +24,12 @@ function getMap() {
 	  
 	  ctx.drawImage(citizen_me, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
 
-	  console.log(data);
-	  console.log("MY DISTANCE FROM SOCIETY NORM", data.distanceFromNorm.__me__);
-	  
 	  data.distanceFromOther.Bob = 0.5;
 	  
 	  var left = Math.random() > 0.5 ? 1 : 0;
 	  
 	  for(var name in data.distanceFromOther) {
 			left = left % 2;
-			console.log("name", name);
-	    console.log("distance from me", data.distanceFromOther[name]);
-			console.log("distance from norm", data.distanceFromNorm[name]);
 			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
 			ctx.drawImage(citizen_unknown,
 			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[name] * radius * Math.cos((0.5+data.distanceFromOther[name]) * Math.PI)),

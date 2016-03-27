@@ -1,3 +1,5 @@
+var currentPageId;
+
 $(document).ready(function(){
 
 	var questions = [];
@@ -7,7 +9,7 @@ $(document).ready(function(){
 	}
 
 	// hide everything by default
-	var currentPageId;
+	
 	$(".page").hide();
 
 	// Get a name from the server if we don't have one
@@ -37,26 +39,19 @@ $(document).ready(function(){
 		}
 	});
 
-
-
-	
 	//$('#judge .profile').on('swipeleft', swipeleftHandler);
 	//$('#judge .profile').on('swiperight', swiperightHandler);
 	
 	$('.decision').on('touchstart', function(){
-		
 		$(this).css(
 			'transform', 'scale(0.8)'
 		);
-		
 	});
 
 	$('.decision').on('touchend', function(){
-		
 		$(this).css(
 			'transform', 'scale(1)'
 		);
-		
 	});
 	
 	$('#dislike').on('touchend', function(){
@@ -68,23 +63,11 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		if(currentPageId === "#map") {
-			return;
-		}
-		var $previousPageId = $(currentPageId);
-		$previousPageId.slideUp(200);
-		currentPageId = "#map";
-		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
+		setPage("#map");
 	})
 
 	$('#judge-icon').on('click', function(){
-		if(currentPageId === "#judge") {
-			return;
-		}
-		var $previousPageId = $(currentPageId);
-		$previousPageId.slideUp(200);
-		currentPageId = "#judge";
-		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
+		setPage("#judge");
 	})
 	
 	$('#answers-box .icon-container').on('click', nextQuestion);
@@ -93,9 +76,23 @@ $(document).ready(function(){
 
 });
 
+var lock_page_transition = false;
 function setPage(newPageId) {
+	if(currentPageId === "#judge") {
+		return;
+	}
+	if(lock_page_transition) {
+		return;
+	}
+	lock_page_transition = true;
 	var $previousPage = $(currentPageId);
 	var $newPage = $(newPageId);
+	$previousPage.slideUp(200);
+	$newPage.slideDown(200, function() { 
+		$previousPage.hide();
+		lock_page_transition = false; 
+		currentPageId = newPageId;
+	});
 }
 
 
