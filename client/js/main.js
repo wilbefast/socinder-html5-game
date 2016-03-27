@@ -33,7 +33,6 @@ $(document).ready(function(){
 				currentPageId = '#map';
 				localStorage.setItem('IAmANewbie', false);
 				getMap();	
-				getUnjudgedCitizen(); // TODO : MOVE THIS TO THE RELEVANT EVENT
 			}
 			$(currentPageId).show();
 		}
@@ -64,18 +63,20 @@ $(document).ready(function(){
 
 	$('#map-icon').on('click', function(){
 		if(!localStorage.IAmANewbie) {
+			getMap();
 			setPage("#map");
 		}
 	})
 
 	$('#judge-icon').on('click', function(){
 		if(!localStorage.IAmANewbie) {
+			getUnjudgedCitizen();
 			setPage("#judge");
 		}
 	})
 	
-	$('.answers .icon-container').on('click', function() {
-		judgeConcept(2, conceptToJudge); // TODO : GET THE VALUE (2) FROM THE BUTTON
+	$('.answers .icon-container').on('click', function(e) {
+		judgeConcept($(this).attr("id"), conceptToJudge); // TODO : GET THE VALUE (2) FROM THE BUTTON
 	});
 
 });
@@ -159,12 +160,11 @@ function judgeConcept(conceptValue, conceptName) {
 			else {
 				if(data.youAreANewbie) {
 					localStorage.setItem('IAmANewbie', true);
-					console.log("You are still a newbie, moving on to next question");
 					getUnjudgedConcept();
 				}
 				else {
-					console.log("You are no longer a newbie, hurrah!");
 					localStorage.setItem('IAmANewbie', false);
+					getMap();
 					setPage('#map');
 				}
 			}

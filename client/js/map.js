@@ -12,6 +12,7 @@ var drawSize = 32;
 var ctx = canvas.getContext("2d");
 
 function getMap() {
+
 	ctx.drawImage(center, canvas.width * 0.5 -drawSize, canvas.height * 0.5 -drawSize, drawSize, drawSize);
 	
 	$.getJSON("/_getMap?citizen=" + localStorage.myName, { format: "json" }).done(function( data ){
