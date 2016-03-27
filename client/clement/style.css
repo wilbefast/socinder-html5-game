@@ -1,0 +1,193 @@
+/********* GENERAL **********/
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Open Sans', sans-serif;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+}
+
+.profile {
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic {
+		width: 100%;
+		border-top-left-radius: 8px; 
+		border-top-right-radius: 8px; 
+		display: block;
+}
+
+/********* NAV **********/
+
+
+nav {
+	background-color: white;
+	padding: 24px 64px;
+	box-shadow: 8px 0 8px #777;
+
+}
+
+.icon {
+	color: #777;
+	margin-right: 32px;
+}
+
+#judge, #settings, #map, #elimination {
+	width: 980px;
+	height: 1240px;
+}
+
+/********* JUDGE **********/
+
+
+#judge {
+	
+	background-color: #ef504c;
+	
+}
+
+#profile-container {
+	padding: 5%;
+	width: 980px;
+	height: 890px;
+	overflow: hidden;
+}
+
+#judge .profile {
+	width: 600px;
+	margin: 0 auto;
+	height: 764px;
+
+}
+	
+
+/********* INFOS **********/
+
+	#judge .infos {
+		padding: 4%;
+		font-weight: bold;
+		color: #777;
+	}
+
+	/********* NAME **********/
+
+		#judge .name {
+			text-align: center;
+			font-size: 2.5em;
+		}
+
+	/********* OPINIONS **********/
+
+		#judge .opinion {
+			width: 90%;
+			margin: 0 auto;
+		}
+
+		#judge .icon-container {
+			float: left;
+			width: 30%;
+			margin: 1.1%;
+			border-radius: 100%;
+			border: 10px solid white;
+			background-size:cover;
+			background-repeat:no-repeat;
+			background-position: center center;
+			text-align: center;
+			padding-top: 0.6em;
+			-moz-box-sizing: border-box; 
+			-webkit-box-sizing: border-box; 
+			box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+		}
+
+		#judge .icon-container img {
+			width: 90%;
+			height: 90%;
+		}
+
+		#judge .opinion1{
+			background-image: url('difference/difference1.png');
+		}
+
+		#judge .opinion2{
+			background-image: url('difference/difference3.png');
+		}
+
+		#judge .opinion3{
+			background-image: url('difference/difference0.png');
+		}
+
+#judge .decision {
+	width: 22%;
+	height: 18%;
+	border-radius: 100%;
+	background-color: white;
+	margin: 2% 10% 0;
+	transition: 0.2s;
+	background-size: 80%; 
+}
+
+#judge #dislike {
+	float: left;
+	background-image: url(icons/explode-icon.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+#judge #like {
+	float: right;
+	background-image: url(icons/heart-icon.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+/********* UNTOUCHED **********/
+
+#judge .untouched {
+	margin: 0 auto;
+}
+
+/********* DISLIKED **********/
+
+#judge .rotate-left {
+  transform: rotate(-30deg) scale(0.8) translate(-1600px);
+  transition: 0.5s;
+  /*opacity: 0;*/
+  /*cursor: w-resize;*/
+}
+
+/********* LIKED **********/
+#judge .rotate-right {
+  transform: rotate(30deg) scale(0.8) translate(1600px);
+  transition: 0.5s;
+  /*opacity: 0;*/
+
+  /*cursor: w-resize;*/
+}
+
+
+#map {
+	display: none;
+}
+
+#elimination {
+	
+	background-color: #ef504c;
+	
+}
+
+#elimination-container {
+	padding: 5%;
+}
+
+#elimination .profile{
+	width: 30%;
+	float: left;
+}
+
+#eliminiation .profile-pic {
+	width: 100%;
+}
+
