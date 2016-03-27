@@ -1,8 +1,14 @@
 $(document).ready(function(){
 
+	var questions = [];
+
+	for (i = 0; i<15 ; i++) {
+		questions.push('question'+i);
+	}
+
 	getUnjudged();
 
-	var currentPageId = '#judge';
+	var currentPageId = '#setup-account';
 	
 	//$('#judge .profile').on('swipeleft', swipeleftHandler);
 	//$('#judge .profile').on('swiperight', swiperightHandler);
@@ -42,6 +48,8 @@ $(document).ready(function(){
 		$('#judge').slideDown(200);
 	})
 	
+	$('#answers-box .icon-container').on('click', nextQuestion);
+
 	console.log('coucou');
 	
 });
@@ -76,6 +84,9 @@ function getUnjudged() {
 		});
 	}
 
+function nextQuestion(e) {
+	
+}
 
 function swipeleftHandler(e) {
 	console.log('coucou');
