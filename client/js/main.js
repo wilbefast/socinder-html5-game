@@ -85,6 +85,10 @@ $(document).ready(function(){
 		judgeConcept($(this).attr("id"), conceptToJudge); // TODO : GET THE VALUE (2) FROM THE BUTTON
 	});
 
+	$('#go-to-judge').on('click', function(){
+		setPage("#judge");
+	})
+
 });
 
 // ----------------------------------------------------------------------------
