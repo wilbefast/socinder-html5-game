@@ -88,12 +88,12 @@ nav {
 		}
 		#judge .icon-container {
 			width: 30%;
+			height: 150px;
 			margin: 1.1%;
 		}
 		.icon-container {
 			float: left;
 			border-radius: 100%;
-			border: 10px solid white;
 			background-size:cover;
 			background-repeat:no-repeat;
 			background-position: center center;
@@ -105,8 +105,8 @@ nav {
 		}
 
 		#judge .icon-container img {
-			width: 90%;
-			height: 90%;
+			margin-top: -12px;
+			width: 100%;
 		}
 
 		#judge .opinion1{
