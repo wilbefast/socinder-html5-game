@@ -53,24 +53,24 @@ $(document).ready(function(){
 function getUnjudged() {
 		
 
-		$.getJSON("../game/judgement/_getVictim?citizen=John", {format: "json"}).done(function(data){
+		$.getJSON("/_getVictim?citizen=John", {format: "json"}).done(function(data){
 		    
 		    citizen = data;
 		    console.log(citizen);
 		    
 			newDiv = '<div class="profile untouched">' +
-							'<img src="profilepics/profile.jpg" class="profile-pic">' +
+							'<img src="images/profilepics/profile.jpg" class="profile-pic">' +
 								'<div class="infos">' +
 									'<h1 class="name">'+ citizen.name + '</h1>' +
 										'<div class="opinion">' +
 											'<div class="icon-container opinion1">' +
-												'<img src="icons/icon.png">' +
+												'<img src="images/icons/icon.png">' +
 											'</div>' +
 											'<div class="icon-container opinion2">' +
-												'<img src="icons/icon.png">' +
+												'<img src="images/icons/icon.png">' +
 											'</div>' +
 											'<div class="icon-container opinion3">' +
-												'<img src="icons/icon.png">' +
+												'<img src="images/icons/icon.png">' +
 											'</div>' +
 										'</div>' +
 									'</div>' +

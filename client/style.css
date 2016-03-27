@@ -109,15 +109,15 @@ nav {
 		}
 
 		#judge .opinion1{
-			background-image: url('difference/difference1.png');
+			background-image: url('images/difference/difference1.png');
 		}
 
 		#judge .opinion2{
-			background-image: url('difference/difference3.png');
+			background-image: url('images/difference/difference3.png');
 		}
 
 		#judge .opinion3{
-			background-image: url('difference/difference0.png');
+			background-image: url('images/difference/difference0.png');
 		}
 
 #judge .decision {
@@ -132,14 +132,14 @@ nav {
 
 #judge #dislike {
 	float: left;
-	background-image: url(icons/explode-icon.png);
+	background-image: url(images/icons/explode-icon.png);
 	background-position: center center;
 	background-repeat: no-repeat;
 }
 
 #judge #like {
 	float: right;
-	background-image: url(icons/heart-icon.png);
+	background-image: url(images/icons/heart-icon.png);
 	background-position: center center;
 	background-repeat: no-repeat;
 }

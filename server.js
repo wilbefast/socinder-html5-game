@@ -308,7 +308,7 @@ var responseRelativeToCitizen = function(req, res, f) {
 }
 
 
-app.get('/game/judgement/_getVictim',
+app.get('/_getVictim',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
 			var victim = citizen.getRandomNotJudged();
@@ -323,7 +323,7 @@ app.get('/game/judgement/_getVictim',
 	}
 );
 
-app.get('/game/judgement/_doJudge',
+app.get('/_doJudge',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
 	    var otherName = req.query.otherCitizen;
@@ -349,7 +349,7 @@ app.get('/game/judgement/_doJudge',
 	}
 );
 
-app.get('/game/_map',
+app.get('/_getMap',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
   		message.distanceFromNorm = {
