@@ -92,6 +92,22 @@ Citizen.prototype.randomConceptJudgements = function() {
 	}
 }
 
+Citizen.prototype.getRandomNotJudgedConcept = function() {
+	var randomisedConcepts = [];
+	for(var conceptIndex in concepts) {
+		var concept = concepts[conceptIndex];
+		if(!this.conceptJudgements[concept.name]) {
+			randomisedConcepts.push(concept);
+		}
+	}
+	if(randomisedConcepts.length <= 0) {
+		return null;
+	}
+	else {
+		return (shuffle(randomisedConcepts))[0];
+	}
+}
+
 Citizen.prototype.getRandomNotJudged = function() {
 	var randomisedCitizens = [];
 	for(var name in Citizen.prototype.byName) {
@@ -358,7 +374,7 @@ app.get('/_joinGame',
 	}
 );
 
-app.get('/_getVictim',
+app.get('/getUnjudgedCitizen',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
 			var victim = citizen.getRandomNotJudged();
@@ -372,6 +388,21 @@ app.get('/_getVictim',
 		});
 	}
 );
+
+app.get('/_getUnjudgedConcept',
+	function(req, res) {
+		responseRelativeToCitizen(req, res, function(citizen, message) {
+			var conceptToJudge = citizen.getRandomNotJudgedConcept();
+			if(conceptToJudge) {
+				message.conceptName = conceptToJudge.name;
+			}
+			else {
+				message.error = "There are no concepts left for '" + citizen.name + "' to judge";
+			}
+		});
+	}
+);
+
 
 app.get('/_doJudge',
 	function(req, res) {
@@ -441,7 +472,7 @@ app.get('/_doJudgeConcept',
 				if(!concept) {
 					message.error = "There is no concept called '" + conceptName + "'";
 				}
-				else if(citizenJudgements[conceptName]) {
+				else if(citizen.conceptJudgements[conceptName]) {
 					message.error = "'" + citizen.name + "' has already judged'" + conceptName + "'";
 				}
 				else {
