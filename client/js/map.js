@@ -13,7 +13,22 @@ var ctx = canvas.getContext("2d");
 
 function getMap() {
 
-	ctx.drawImage(center, canvas.width * 0.5 -drawSize, canvas.height * 0.5 -drawSize, drawSize, drawSize);
+
+	ctx.beginPath();
+    ctx.arc(canvas.width * 0.5, canvas.height * 0.5, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#00C0CC';
+    ctx.fill();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#D6FDFF';
+    ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.arc(canvas.width * 0.5, canvas.height * 0.5, radius * 0.05, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#267A7F';
+    ctx.fill();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#00C0CC';
+    ctx.stroke();
 	
 	$.getJSON("/_getMap?citizen=" + localStorage.myName, { format: "json" }).done(function( data ){
 	 	if(data.error) {
@@ -52,20 +67,23 @@ function getMap() {
 			else 
 				break;*/
 		  
-			left = left % 2;
+			
 			
 			imgArray[i].onload = function(){
-
+			left = left % 2;
 			
 			ctx.drawImage(this,
-			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[name] * radius * Math.cos((0.5+data.distanceFromOther[name]) * Math.PI)),
-			(canvas.height	 * 0.5) + data.distanceFromNorm[name] * radius * Math.sin((0.5+data.distanceFromOther[name]) * Math.PI),drawSize,drawSize);
+			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[this.id] * radius * Math.cos((0.5+data.distanceFromOther[this.id]) * Math.PI)),
+			(canvas.height	 * 0.5) + data.distanceFromNorm[this.id] * radius * Math.sin((0.5+data.distanceFromOther[this.id]) * Math.PI),drawSize,drawSize);
+			
+			left++;
 		};
+		imgArray[i].id = name;
 		imgArray[i] .src = "/images/profilepics/"+name+".jpg";
 		i++;
 			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
 			
-			left++;
+			
 	  }
 	});
 }
