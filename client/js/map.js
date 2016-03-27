@@ -21,18 +21,50 @@ function getMap() {
 	 		return;
 	 	}
 
-	 	var myDistanceToNorm = data.distanceFromNorm.__me__;
+	 var myDistanceToNorm = data.distanceFromNorm.__me__;
 	  
-	  ctx.drawImage(citizen_me, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
+	  var img = new Image();
+	  
+	  console.log("img:", img);
+	  img.onload = function(){
+		  
+		ctx.drawImage(img, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
+	  };
+	  img.src = '/images/profilepics/'+localStorage.myName+'.jpg';
 	  
 	  var left = Math.random() > 0.5 ? 1 : 0;
 	  
+	  var imgArray = [];
+	  var i = 0;
+	  
 	  for(var name in data.distanceFromOther) {
+			imgArray[i] = new Image();
+			
+		  
+			/*	if (data.Judgement == "positive")
+			{
+				imgArray[i].style.border='2px solid #8EFF58';
+			}
+			else if (data.Judgement == "negative")
+			{
+				style.border='2px solid #8EFF58';
+			}
+			else 
+				break;*/
+		  
 			left = left % 2;
-			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
-			ctx.drawImage(citizen_unknown,
+			
+			imgArray[i].onload = function(){
+
+			
+			ctx.drawImage(this,
 			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[name] * radius * Math.cos((0.5+data.distanceFromOther[name]) * Math.PI)),
 			(canvas.height	 * 0.5) + data.distanceFromNorm[name] * radius * Math.sin((0.5+data.distanceFromOther[name]) * Math.PI),drawSize,drawSize);
+		};
+		imgArray[i] .src = "/images/profilepics/"+name+".jpg";
+		i++;
+			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
+			
 			left++;
 	  }
 	});
