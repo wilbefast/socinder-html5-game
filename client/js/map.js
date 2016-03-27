@@ -11,9 +11,35 @@ var drawSize = 32;
 
 var ctx = canvas.getContext("2d");
 
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 function getMap() {
 
-	ctx.drawImage(center, canvas.width * 0.5 -drawSize, canvas.height * 0.5 -drawSize, drawSize, drawSize);
+
+	ctx.beginPath();
+    ctx.arc(canvas.width * 0.5, canvas.height * 0.5, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#00C0CC';
+    ctx.fill();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#D6FDFF';
+    ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.arc(canvas.width * 0.5, canvas.height * 0.5, radius * 0.05, 0, 2 * Math.PI, false);
+    ctx.fillStyle = '#267A7F';
+    ctx.fill();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#00C0CC';
+    ctx.stroke();
 	
 	$.getJSON("/_getMap?citizen=" + localStorage.myName, { format: "json" }).done(function( data ){
 	 	if(data.error) {
@@ -31,9 +57,7 @@ function getMap() {
 		ctx.drawImage(img, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
 	  };
 	  img.src = '/images/profilepics/'+localStorage.myName+'.jpg';
-	  
-	  var left = Math.random() > 0.5 ? 1 : 0;
-	  
+
 	  var imgArray = [];
 	  var i = 0;
 	  
@@ -52,20 +76,23 @@ function getMap() {
 			else 
 				break;*/
 		  
-			left = left % 2;
+			
 			
 			imgArray[i].onload = function(){
 
+				left = this.src.hashCode() % 2;
+
 			
 			ctx.drawImage(this,
-			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[name] * radius * Math.cos((0.5+data.distanceFromOther[name]) * Math.PI)),
-			(canvas.height	 * 0.5) + data.distanceFromNorm[name] * radius * Math.sin((0.5+data.distanceFromOther[name]) * Math.PI),drawSize,drawSize);
+			(canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * (data.distanceFromNorm[this.id] * radius * Math.cos((0.5+data.distanceFromOther[this.id]) * Math.PI)),
+			(canvas.height	 * 0.5) + data.distanceFromNorm[this.id] * radius * Math.sin((0.5+data.distanceFromOther[this.id]) * Math.PI),drawSize,drawSize);
 		};
+		imgArray[i].id = name;
 		imgArray[i] .src = "/images/profilepics/"+name+".jpg";
 		i++;
 			//ctx.drawImage(citizen_unknown, (canvas.width * 0.5) - (drawSize * (-1+left*2)) + (-1+left*2) * data.distanceFromNorm[name] * radius, radius * Math.sin(data.distanceFromOther[name] * Math.PI),drawSize,drawSize);
 			
-			left++;
+			
 	  }
 	});
 }
