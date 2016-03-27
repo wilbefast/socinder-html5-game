@@ -195,23 +195,22 @@ Citizen.prototype.getDistanceFromNorm = function() {
 
 GAME_ID = new Date().getTime();
 
-concepts = [
-	new Concept("Cats"),
-	new Concept("Chainsaws"),
-	new Concept("Underpants"),
-	new Concept("Nazis"),
-	new Concept("Robot party"),
-	new Concept("Autocracy"),
-	new Concept("Anarchy"),
-	new Concept("Peanut allergies"),
-	new Concept("Golfing"),
-	new Concept("Socks"),
-	new Concept("Blowdarts"),
-	new Concept("Apathy"),
-	new Concept("Cranes"),
-	new Concept("Trains"),
-	new Concept("Donald Trump")
-];
+var concepts = [
+	new Concept("money"),
+	new Concept("justice"),
+	new Concept("war"),
+	new Concept("migration"),
+	new Concept("religion"),
+	new Concept("tradition"),
+	new Concept("surveillance"),
+	new Concept("authority"),
+	new Concept("competitive"),
+	new Concept("nature"),
+	new Concept("adaptability"),
+	new Concept("carrot"),
+	new Concept("fashion"),
+	new Concept("hobby"),
+	new Concept("dog")];
 
  userName = ["Aaron","Abdallah","Abril","Aby","Adam","Ahmed","Aiden","Akira","Alexandre","Ali","Alice","Amelia","Andrei","Anna","Arthur","Ava","Ben","Camila","Catherine","Celine",
 			 "Charlotte","Christophe","Daniel","David","Diego","Dylan","Elodie","Elsa","Emilie","Emma","Enzo","Filip","Finn","Francesco","Gabriel","Harry","Haruto","Hina","Hiroshi","Hiroto",
