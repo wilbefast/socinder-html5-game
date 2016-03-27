@@ -196,3 +196,55 @@ function setPage(newPageId) {
 		currentPageId = newPageId;
 	});
 }
+
+function getUnjudged() {
+		
+		$.getJSON("/_getVictim?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
+		    
+		    currentCitizen = data;
+		    currentCitizenName = data.name;
+		    citizen = data;
+		    console.log(currentCitizen);
+		    
+			newDiv = '<div class="profile untouched">' +
+							'<img src="images/profilepics/' + currentCitizen.name + '.jpg" class="profile-pic">' +
+								'<div class="infos">' +
+									'<h1 class="name">' + currentCitizen.name + '</h1>' +
+										'<div class="opinion">' +
+											'<div class="icon-container opinion1">' +
+												'<img src="images/icons/'+ currentCitizen.concepts[0].name + currentCitizen.concepts[0].judgment +'.png">' +
+											'</div>' +
+											'<div class="icon-container opinion2">' +
+												'<img src="images/icons/'+ currentCitizen.concepts[1].name + currentCitizen.concepts[1].judgment +'.png">' +
+											'</div>' +
+											'<div class="icon-container opinion3">' +
+												'<img src="images/icons/'+ currentCitizen.concepts[2].name + currentCitizen.concepts[2].judgment +'.png">' +
+											'</div>' +
+										'</div>' +
+									'</div>' +
+								'</div>';
+			$('#profile-container').append(newDiv).on('swiperight', swiperightHandler).on('swipeleft', swipeleftHandler);
+		});
+	}
+function nextQuestion(e) {
+
+	$('#question').innerHTML = questions[currentQuestion];
+	console.log(questions[currentQuestion]);
+	currentQuestion++;
+	
+}
+
+function swipeleftHandler(e) {
+	console.log('coucou');
+	$('#judge .profile').addClass('rotate-left').delay(700).fadeOut(1);
+	getUnjudged();
+	judge('negative', currentCitizen.name);
+	
+}
+
+function swiperightHandler(e) {
+	console.log('coucou');
+	$('#judge .profile').addClass('rotate-right').delay(700).fadeOut(1);
+	getUnjudged();
+	judge('positive', currentCitizen.name);
+}
