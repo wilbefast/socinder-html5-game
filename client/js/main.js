@@ -1,13 +1,20 @@
+
 var currentQuestion = 0;
 var questions = [];
 var currentCitizen; 
 var currentCitizenName ="";
+var currentPageId;
+
 
 $(document).ready(function(){
 
 	for (i = 0; i<15 ; i++) {
 		questions.push('question'+i);
 	}
+
+	// hide everything by default
+	
+	$(".page").hide();
 
 	// Get a name from the server if we don't have one
 	var query = (localStorage.myName && localStorage.gameId) 
@@ -18,37 +25,39 @@ $(document).ready(function(){
 			console.error("Failed to join the game", data.error);
 		}
 		else {
-			console.log("data", data);
 			localStorage.setItem('myName', data.yourName);
 			localStorage.setItem('gameId', data.gameId);
 
+			$(".yourName").text(data.yourName);
+
+			if(data.youAreANewbie) {
+				currentPageId = '#setup-account';
+				localStorage.setItem('IAmANewbie', true);
+			}
+			else {
+				currentPageId = '#map';
+				localStorage.setItem('IAmANewbie', false);
+			}
+
 			getMap();
 			getUnjudged();
+			$(currentPageId).show();
 		}
 	});
-	
-	// hide everything except the current page
-	$(".page").hide();
-	var currentPageId = '#setup-account';
-	$(currentPageId).show();
-	
+
 	//$('#judge .profile').on('swipeleft', swipeleftHandler);
 	//$('#judge .profile').on('swiperight', swiperightHandler);
 	
 	$('.decision').on('touchstart', function(){
-		
 		$(this).css(
 			'transform', 'scale(0.8)'
 		);
-		
 	});
 
 	$('.decision').on('touchend', function(){
-		
 		$(this).css(
 			'transform', 'scale(1)'
 		);
-		
 	});
 	
 	$('#dislike').on('touchend', function(){
@@ -60,23 +69,15 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		if(currentPageId === "#map") {
-			return;
+		if(!localStorage.IAmANewbie) {
+			setPage("#map");
 		}
-		var $previousPageId = $(currentPageId);
-		$previousPageId.slideUp(200);
-		currentPageId = "#map";
-		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 
 	$('#judge-icon').on('click', function(){
-		if(currentPageId === "#judge") {
-			return;
+		if(!localStorage.IAmANewbie) {
+			setPage("#judge");
 		}
-		var $previousPageId = $(currentPageId);
-		$previousPageId.slideUp(200);
-		currentPageId = "#judge";
-		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 	
 	$('.answers .icon-container').on('click', nextQuestion);
@@ -87,10 +88,30 @@ $(document).ready(function(){
 
 });
 
+
 function judge(answer, judgedName) {
 
 		$.getJSON("/_doJudge?citizen=" + localStorage.myName + '&otherCitizen=' + judgedName + '&judgement=' + answer, {format: "json"}).done(function(data){})
 
+}
+
+var lock_page_transition = false;
+function setPage(newPageId) {
+	if(currentPageId === newPageId) {
+		return;
+	}
+	if(lock_page_transition) {
+		return;
+	}
+	lock_page_transition = true;
+	var $previousPage = $(currentPageId);
+	var $newPage = $(newPageId);
+	$previousPage.slideUp(200);
+	$newPage.slideDown(200, function() { 
+		$previousPage.hide();
+		lock_page_transition = false; 
+		currentPageId = newPageId;
+	});
 }
 
 function getUnjudged() {

@@ -28,6 +28,16 @@ function shuffle(array) {
 // Concepts
 // ------------------------------------
 
+var concepts;
+
+function getConceptByName(name) {
+	for(var i in concepts) {
+		if(concepts[i].name === name) {
+			return concepts[i];
+		}
+	}
+}
+
 function Concept(name) {
 	this.name = name;
 	this.overallJudgement = [ 0, 0, 0, 0 ];
@@ -70,6 +80,10 @@ function Citizen(name) {
 	return this;
 }
 Citizen.prototype.byName = {}
+
+Citizen.prototype.isNewbie = function() {
+	return (Object.keys(this.conceptJudgements).length < concepts.length);
+}
 
 Citizen.prototype.randomConceptJudgements = function() {
 	for(var j in concepts) {
@@ -181,7 +195,7 @@ Citizen.prototype.getDistanceFromNorm = function() {
 
 GAME_ID = new Date().getTime();
 
-var concepts = [
+concepts = [
 	new Concept("Cats"),
 	new Concept("Chainsaws"),
 	new Concept("Underpants"),
@@ -315,13 +329,13 @@ var responseRelativeToCitizen = function(req, res, f) {
 
 app.get('/_joinGame',
 	function(req, res) {
-		var citizen = req.query.citizen;
+		var citizenName = req.query.citizen;
 		var gameId = req.query.gameId;
-		console.log(citizen, gameId);
 		var message = { 
 			gameId : GAME_ID 
 		};
-		var isValidCitizen = (Citizen.prototype.byName[citizen]) !== undefined;
+		var citizen = Citizen.prototype.byName[citizenName];
+		var isValidCitizen = (citizen !== undefined);
 		var isGameIdValid = (gameId == GAME_ID);
 
 		if(!isValidCitizen || !isGameIdValid) {
@@ -329,14 +343,16 @@ app.get('/_joinGame',
 				var newbie = new Citizen(userName[userName.nextIndex++]);
 				message.error = false;
 				message.yourName = newbie.name;
+				message.youAreANewbie = true;
 			}
 			else {
 				message.error = "All the usernames have already been used"
 			}
 		}
 		else {
-			console.log("welcome back", citizen);
-			message.yourName = citizen;
+			console.log("welcome back", citizenName);
+			message.yourName = citizenName;
+			message.youAreANewbie = citizen.isNewbie();
 		}
 		res.send(JSON.stringify(message));
 	}
@@ -406,9 +422,40 @@ app.get('/_getMap',
 	}
 );
 
+app.get('/_doJudgeConcept',
+	function(req, res) {
+		responseRelativeToCitizen(req, res, function(citizen, message) {
+			var conceptName = req.query.conceptName;
+			var conceptValue = req.query.conceptValue;
+			if(!conceptName) {
+				message.error = "Missing 'conceptName' query parameter";
+			}
+			else if(!conceptValue) {
+				message.error = "Missing 'conceptValue' query parameter";
+			}
+			else if(conceptValue != 0 && conceptValue != 1 && conceptValue != 2 && conceptValue != 3) {
+				message.error = "Invalid 'conceptValue' query parameter, should be 0, 1, 2 or 3";
+			}
+			else {
+				var concept = getConceptByName(conceptName);
+				if(!concept) {
+					message.error = "There is no concept called '" + conceptName + "'";
+				}
+				else if(citizenJudgements[conceptName]) {
+					message.error = "'" + citizen.name + "' has already judged'" + conceptName + "'";
+				}
+				else {
+					citizen.setConceptJudgement(concept, conceptValue);
+					message.youAreANewbie = citizen.isNewbie();
+				}
+			}
+		});
+	}
+);
+
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/prout');
+    res.redirect('/');
   });
