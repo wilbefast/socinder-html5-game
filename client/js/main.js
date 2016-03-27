@@ -127,10 +127,6 @@ $(document).ready(function(){
 			console.log("You can't judge yet, you're a newbie");
 		}
 	})
-	
-	$('.answers .icon-container').on('click', function(e) {
-		judgeConcept($(this).attr("id"), conceptToJudge); // TODO : GET THE VALUE (2) FROM THE BUTTON
-	});
 
 	$('#go-to-judge').on('click', function(){
 		setPage("#judge");
@@ -255,9 +251,12 @@ function getUnjudgedConcept() {
 						'</div>'+
 				'</div>';
 				
-				
+			
 			$('#answers-box')
 			.append(newDiv)	;
+			$('.answers .icon-container').on('click', function(e) {
+		judgeConcept($(this).attr("id"), conceptToJudge); // TODO : GET THE VALUE (2) FROM THE BUTTON
+	});
     }
   });
 }
