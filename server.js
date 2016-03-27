@@ -317,7 +317,6 @@ app.get('/_joinGame',
 	function(req, res) {
 		var citizen = req.query.citizen;
 		var gameId = req.query.gameId;
-		console.log(citizen, gameId);
 		var message = { 
 			gameId : GAME_ID 
 		};
@@ -329,6 +328,7 @@ app.get('/_joinGame',
 				var newbie = new Citizen(userName[userName.nextIndex++]);
 				message.error = false;
 				message.yourName = newbie.name;
+				message.youAreANewbie = true;
 			}
 			else {
 				message.error = "All the usernames have already been used"

@@ -6,6 +6,10 @@ $(document).ready(function(){
 		questions.push('question'+i);
 	}
 
+	// hide everything by default
+	var currentPageId;
+	$(".page").hide();
+
 	// Get a name from the server if we don't have one
 	var query = (localStorage.myName && localStorage.gameId) 
 		? "?citizen=" + localStorage.myName + "&gameId=" + localStorage.gameId
@@ -15,19 +19,26 @@ $(document).ready(function(){
 			console.error("Failed to join the game", data.error);
 		}
 		else {
-			console.log("data", data);
 			localStorage.setItem('myName', data.yourName);
 			localStorage.setItem('gameId', data.gameId);
 
+			$(".yourName").text(data.yourName);
+
+			if(data.youAreANewbie) {
+				currentPageId = '#setup-account';
+			}
+			else {
+				currentPageId = '#map';
+			}
+
 			getMap();
 			getUnjudged();
+			$(currentPageId).show();
 		}
 	});
-	
-	// hide everything except the current page
-	$(".page").hide();
-	var currentPageId = '#setup-account';
-	$(currentPageId).show();
+
+
+
 	
 	//$('#judge .profile').on('swipeleft', swipeleftHandler);
 	//$('#judge .profile').on('swiperight', swiperightHandler);
@@ -81,6 +92,11 @@ $(document).ready(function(){
 	console.log('coucou');
 
 });
+
+function setPage(newPageId) {
+	var $previousPage = $(currentPageId);
+	var $newPage = $(newPageId);
+}
 
 
 function getUnjudged() {
