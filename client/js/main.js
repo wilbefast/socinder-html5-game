@@ -96,8 +96,7 @@ function getUnjudgedCitizen() {
     currentCitizen = data;
     currentCitizenName = data.name;
     citizen = data;
-    console.log(currentCitizen);
-    
+
 		newDiv = '<div class="profile untouched">' +
 					'<img src="images/profilepics/profile.jpg" class="profile-pic">' +
 						'<div class="infos">' +
@@ -115,7 +114,10 @@ function getUnjudgedCitizen() {
 								'</div>' +
 							'</div>' +
 						'</div>';
-		$('#profile-container').append(newDiv).on('swiperight', swiperightHandler).on('swipeleft', swipeleftHandler);
+		$('#profile-container')
+			.append(newDiv)
+			.on('swiperight', swiperightHandler)
+			.on('swipeleft', swipeleftHandler);
 	});
 }
 
@@ -197,16 +199,19 @@ function setPage(newPageId) {
 	});
 }
 
+
+var lock_judgement = false;
+
 function getUnjudged() {
 		
-		$.getJSON("/_getVictim?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
+		$.getJSON("/_getUnjudgedCitizen?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
 		    
 		    currentCitizen = data;
 		    currentCitizenName = data.name;
 		    citizen = data;
-		    console.log(currentCitizen);
 		    
-			newDiv = '<div class="profile untouched">' +
+		    $('#profile-container').empty();
+				newDiv = '<div class="profile untouched">' +
 							'<img src="images/profilepics/' + currentCitizen.name + '.jpg" class="profile-pic">' +
 								'<div class="infos">' +
 									'<h1 class="name">' + currentCitizen.name + '</h1>' +
@@ -224,6 +229,7 @@ function getUnjudged() {
 									'</div>' +
 								'</div>';
 			$('#profile-container').append(newDiv).on('swiperight', swiperightHandler).on('swipeleft', swipeleftHandler);
+			lock_judgement = false;
 		});
 	}
 function nextQuestion(e) {
@@ -235,16 +241,25 @@ function nextQuestion(e) {
 }
 
 function swipeleftHandler(e) {
-	console.log('coucou');
-	$('#judge .profile').addClass('rotate-left').delay(700).fadeOut(1);
-	getUnjudged();
-	judge('negative', currentCitizen.name);
-	
+	if(lock_judgement) {
+		return;
+	}
+	lock_judgement = true;
+
+	$('#judge .profile').addClass('rotate-left').delay(700).fadeOut(1, function() {
+		getUnjudged();
+		judgeCitizen('negative', currentCitizen.name);
+	});
 }
 
 function swiperightHandler(e) {
-	console.log('coucou');
-	$('#judge .profile').addClass('rotate-right').delay(700).fadeOut(1);
-	getUnjudged();
-	judge('positive', currentCitizen.name);
+	if(lock_judgement) {
+		return;
+	}
+	lock_judgement = true;
+
+	$('#judge .profile').addClass('rotate-right').delay(700).fadeOut(1, function() {
+		getUnjudged();
+		judgeCitizen('positive', currentCitizen.name);
+	});
 }
