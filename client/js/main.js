@@ -28,9 +28,11 @@ $(document).ready(function(){
 
 			if(data.youAreANewbie) {
 				currentPageId = '#setup-account';
+				localStorage.setItem('IAmANewbie', true);
 			}
 			else {
 				currentPageId = '#map';
+				localStorage.setItem('IAmANewbie', false);
 			}
 
 			getMap();
@@ -63,11 +65,15 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		setPage("#map");
+		if(!localStorage.IAmANewbie) {
+			setPage("#map");
+		}
 	})
 
 	$('#judge-icon').on('click', function(){
-		setPage("#judge");
+		if(!localStorage.IAmANewbie) {
+			setPage("#judge");
+		}
 	})
 	
 	$('#answers-box .icon-container').on('click', nextQuestion);
@@ -78,7 +84,7 @@ $(document).ready(function(){
 
 var lock_page_transition = false;
 function setPage(newPageId) {
-	if(currentPageId === "#judge") {
+	if(currentPageId === newPageId) {
 		return;
 	}
 	if(lock_page_transition) {
