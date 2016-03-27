@@ -24,6 +24,7 @@ String.prototype.hashCode = function() {
 
 function getMap() {
 
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.beginPath();
     ctx.arc(canvas.width * 0.5, canvas.height * 0.5, radius, 0, 2 * Math.PI, false);

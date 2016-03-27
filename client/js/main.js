@@ -130,7 +130,13 @@ $(document).ready(function(){
 	})
 
 	$('#go-to-judge').on('click', function(){
-		setPage("#judge");
+		if(localStorage.IAmANewbie == "false") {
+			getUnjudgedCitizen();
+			setPage("#judge");
+		}
+		else {
+			console.log("You can't judge yet, you're a newbie");
+		}
 	})
 
 });
