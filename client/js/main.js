@@ -62,16 +62,22 @@ $(document).ready(function(){
 	});
 
 	$('#map-icon').on('click', function(){
-		if(!localStorage.IAmANewbie) {
+		if(localStorage.IAmANewbie == "false") {
 			getMap();
 			setPage("#map");
+		}
+		else {
+			console.log("You can't see map yet, you're a newbie");
 		}
 	})
 
 	$('#judge-icon').on('click', function(){
-		if(!localStorage.IAmANewbie) {
+		if(localStorage.IAmANewbie == "false") {
 			getUnjudgedCitizen();
 			setPage("#judge");
+		}
+		else {
+			console.log("You can't judge yet, you're a newbie");
 		}
 	})
 	
@@ -118,14 +124,12 @@ function judgeCitizen(answer, judgedName) {
 }
 
 function swipeleftHandler(e) {
-	console.log('coucou');
 	$('#judge .profile').addClass('rotate-left').delay(700).fadeOut(1);
 	getUnjudgedCitizen();
 	judgeCitizen('negative', currentCitizen.name);
 }
 
 function swiperightHandler(e) {
-	console.log('coucou');
 	$('#judge .profile').addClass('rotate-right').delay(700).fadeOut(1);
 	getUnjudgedCitizen();
 	judgeCitizen('positive', currentCitizen.name);
@@ -142,7 +146,6 @@ function getUnjudgedConcept() {
     }
     else {
     	conceptToJudge = data.conceptName;
-    	console.log(conceptToJudge);
   		$('#question').html(conceptToJudge);
     }
   });

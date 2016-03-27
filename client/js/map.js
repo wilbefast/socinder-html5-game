@@ -24,8 +24,6 @@ function getMap() {
 	 	var myDistanceToNorm = data.distanceFromNorm.__me__;
 	  
 	  ctx.drawImage(citizen_me, canvas.width * 0.5 -drawSize, canvas.height * 0.5 + radius * myDistanceToNorm-drawSize, drawSize, drawSize);
-
-	  data.distanceFromOther.Bob = 0.5;
 	  
 	  var left = Math.random() > 0.5 ? 1 : 0;
 	  

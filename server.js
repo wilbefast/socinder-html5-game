@@ -373,7 +373,7 @@ app.get('/_joinGame',
 	}
 );
 
-app.get('/getUnjudgedCitizen',
+app.get('/_getUnjudgedCitizen',
 	function(req, res) {
 		responseRelativeToCitizen(req, res, function(citizen, message) {
 			var victim = citizen.getRandomNotJudged();
