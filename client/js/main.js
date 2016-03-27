@@ -92,6 +92,7 @@ $(document).ready(function(){
 // ----------------------------------------------------------------------------
 
 function getUnjudgedCitizen() {	
+	
 	$.getJSON("/_getUnjudgedCitizen?citizen=" + localStorage.myName, {format: "json"}).done(function(data){    
     currentCitizen = data;
     currentCitizenName = data.name;
