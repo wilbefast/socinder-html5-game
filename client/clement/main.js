@@ -1,14 +1,11 @@
 $(document).ready(function(){
 
 	getUnjudged();
-	
 
 	var currentPageId = '#judge';
-
-	console.log($('.icon-container').css('width'));
 	
-	$('#judge .profile').on('swipeleft', swipeleftHandler);
-	$('#judge .profile').on('swiperight', swiperightHandler );
+	//$('#judge .profile').on('swipeleft', swipeleftHandler);
+	//$('#judge .profile').on('swiperight', swiperightHandler);
 	
 	$('.decision').on('touchstart', function(){
 		
@@ -75,7 +72,7 @@ function getUnjudged() {
 										'</div>' +
 									'</div>' +
 								'</div>';
-			$('#profile-container').append(newDiv);
+			$('#profile-container').append(newDiv).on('swiperight', swiperightHandler).on('swipeleft', swipeleftHandler);
 		});
 	}
 
