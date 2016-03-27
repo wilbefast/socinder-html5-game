@@ -1,6 +1,9 @@
-$(document).ready(function(){
+var currentQuestion = 0;
+var questions = [];
+var currentCitizen; 
+var currentCitizenName ="";
 
-	var questions = [];
+$(document).ready(function(){
 
 	for (i = 0; i<15 ; i++) {
 		questions.push('question'+i);
@@ -76,19 +79,28 @@ $(document).ready(function(){
 		$(currentPageId).slideDown(200, function() { $previousPageId.hide(); });
 	})
 	
-	$('#answers-box .icon-container').on('click', nextQuestion);
+	$('.answers .icon-container').on('click', nextQuestion);
 
 	console.log('coucou');
 
+	$('#question').innerHTML = questions[currentQuestion];
+
 });
 
+function judge(answer, judgedName) {
+
+		$.getJSON("/_doJudge?citizen=" + localStorage.myName + '&otherCitizen=' + judgedName + '&judgement=' + answer, {format: "json"}).done(function(data){})
+
+}
 
 function getUnjudged() {
 		
 		$.getJSON("/_getVictim?citizen=" + localStorage.myName, {format: "json"}).done(function(data){
 		    
+		    currentCitizen = data;
+		    currentCitizenName = data.name;
 		    citizen = data;
-		    console.log(citizen);
+		    console.log(currentCitizen);
 		    
 			newDiv = '<div class="profile untouched">' +
 							'<img src="images/profilepics/profile.jpg" class="profile-pic">' +
@@ -112,6 +124,10 @@ function getUnjudged() {
 	}
 
 function nextQuestion(e) {
+
+	$('#question').innerHTML = questions[currentQuestion];
+	console.log(questions[currentQuestion]);
+	currentQuestion++;
 	
 }
 
@@ -119,6 +135,7 @@ function swipeleftHandler(e) {
 	console.log('coucou');
 	$('#judge .profile').addClass('rotate-left').delay(700).fadeOut(1);
 	getUnjudged();
+	judge('negative', currentCitizen.name);
 	
 }
 
@@ -126,4 +143,5 @@ function swiperightHandler(e) {
 	console.log('coucou');
 	$('#judge .profile').addClass('rotate-right').delay(700).fadeOut(1);
 	getUnjudged();
+	judge('positive', currentCitizen.name);
 }
