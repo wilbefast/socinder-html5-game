@@ -378,3 +378,12 @@ app.get('/auth/facebook/callback',
     // Successful authentication, redirect home.
     res.redirect('/prout');
   });
+  
+  
+  
+ userName = ["Aaron","Abdallah","Abril","Aby","Adam","Ahmed","Aiden","Akira","Alexandre","Ali","Alice","Amelia","Andrei","Anna","Arthur","Ava","Ben","Camila","Catherine","Celine",
+			 "Charlotte","Christophe","Daniel","David","Diego","Dylan","Elodie","Elsa","Emilie","Emma","Enzo","Filip","Finn","Francesco","Gabriel","Harry","Haruto","Hina","Hiroshi","Hiroto",
+			 "Ines","Isabela","Jack","Jacob","Jean","Jeremy","Jessica","Joshua","Juan","Julie","Julien","Kayla","Kevin","Kristin","Lara","Laura","Lea","Leila","Lena","Leon",
+			 "Liam","Lily","Lisa","Lucas","Lucie","Luisa","Luke","Madison","Mamadou","Manon","Marie","Marine","Matheo","Maxime","Mehdi","Mia","Miguel","Mohamed","Nathan","Nicolas",
+			 "Noa","Olivia","Oscar","Paul","Paula","Pierre","Ren","Riley","Santiago","Sara","Sebastian","Sophie","Stefan","Thomas","Wei","William","Yuna","Yusuf","Zoe","William",
+			 "Clement","Mathieu","Maxence","Simon","Charlie","Guillaume"];
